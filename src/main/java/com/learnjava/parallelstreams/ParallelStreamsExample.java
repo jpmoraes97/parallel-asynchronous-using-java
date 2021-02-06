@@ -21,10 +21,6 @@ public class ParallelStreamsExample {
     public static void main(String[] args) {
         List<String> namesList = DataSet.namesList();
         ParallelStreamsExample parallelStreamsExample = new ParallelStreamsExample();
-<<<<<<< HEAD
-
-=======
->>>>>>> 00c727c9fac4a989104f5b10945e2ac47bdd1541
         startTimer();
         List<String> resultList = parallelStreamsExample.stringTransform(namesList);
         log("ResultList: " + resultList);
@@ -33,10 +29,6 @@ public class ParallelStreamsExample {
 
     private String addNameLengthTransform(String name) {
         delay(500);
-<<<<<<< HEAD
         return name.length() + " - " + name;
-=======
-        return name.length() + " - ".concat(name);
->>>>>>> 00c727c9fac4a989104f5b10945e2ac47bdd1541
     }
 }
