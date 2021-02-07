@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import static com.learnjava.util.CommonUtil.startTimer;
 import static com.learnjava.util.CommonUtil.timeTaken;
+import static com.learnjava.util.LoggerUtil.log;
 
 @AllArgsConstructor
 public class CheckoutService {
@@ -30,10 +31,31 @@ public class CheckoutService {
                 .filter(CartItem::isExpired)
                 .collect(Collectors.toList());
 
+        timeTaken();
         if (priceValidationList.size() > 0) {
             return new CheckoutResponse(CheckoutStatus.FAILURE, priceValidationList);
         }
-        timeTaken();
-        return new CheckoutResponse(CheckoutStatus.SUCCESS);
+
+
+        //double finalPrice = calculateFinalPrice(cart);
+        double finalPrice = calculateFinalPrice_Reduce(cart);
+        log("Checkout complete and the final price is: " + finalPrice);
+
+        return new CheckoutResponse(CheckoutStatus.SUCCESS, finalPrice);
+    }
+
+    private double calculateFinalPrice(Cart cart) {
+        return cart.getCartItemList()
+                .parallelStream()
+                .map(cartItem -> cartItem.getQuantity() * cartItem.getRate())
+                .mapToDouble(Double::doubleValue)
+                .sum();
+    }
+
+    private double calculateFinalPrice_Reduce(Cart cart) {
+        return cart.getCartItemList()
+                .parallelStream()
+                .map(cartItem -> cartItem.getQuantity() * cartItem.getRate())
+                .reduce(0.0, Double::sum);
     }
 }
