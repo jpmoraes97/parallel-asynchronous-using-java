@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;
 
+import static com.learnjava.util.CommonUtil.startTimer;
+import static com.learnjava.util.CommonUtil.timeTaken;
 import static org.junit.Assert.assertEquals;
 
 class CompletableFutureHelloWorldTest {
@@ -66,5 +68,23 @@ class CompletableFutureHelloWorldTest {
 
         // then
         assertEquals("HELLO WORLD! HI COMPLETABLEFUTURE! BYE!", helloWorld);
+    }
+
+    @Test
+    void helloWorld_thenCompose() {
+        // given
+        startTimer();
+
+        // when
+        CompletableFuture<String> completableFuture = cfhw.helloWorld_thenCompose();
+
+        // then
+        completableFuture
+                .thenAccept(s -> {
+                    assertEquals("HELLO WORLD!", s);
+                })
+                .join();
+
+        timeTaken();
     }
 }

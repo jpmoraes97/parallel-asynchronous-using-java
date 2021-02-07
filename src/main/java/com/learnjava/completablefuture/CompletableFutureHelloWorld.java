@@ -17,8 +17,6 @@ public class CompletableFutureHelloWorld {
     }
 
     public CompletableFuture<String> helloWorld() {
-        HelloWorldService hws = new HelloWorldService();
-
         return CompletableFuture.supplyAsync(hws::helloWorld)
                 .thenApply(String::toUpperCase);
         // .join(); // blocks a main thread until the task in completed
@@ -94,6 +92,13 @@ public class CompletableFutureHelloWorld {
 
         timeTaken();
         return hw;
+    }
+
+    public CompletableFuture<String> helloWorld_thenCompose() {
+        return CompletableFuture.supplyAsync(hws::hello)
+                .thenCompose((previous) -> hws.worldFuture(previous))
+                .thenApply(String::toUpperCase);
+        // .join(); // blocks a main thread until the task in completed
     }
 
     public static void main(String[] args) {
