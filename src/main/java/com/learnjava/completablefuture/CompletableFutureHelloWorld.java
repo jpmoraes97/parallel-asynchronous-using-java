@@ -5,10 +5,23 @@ import com.learnjava.util.LoggerUtil;
 
 import java.util.concurrent.CompletableFuture;
 
-import static com.learnjava.util.CommonUtil.delay;
 import static com.learnjava.util.LoggerUtil.log;
 
 public class CompletableFutureHelloWorld {
+
+    private final HelloWorldService hws;
+
+    public CompletableFutureHelloWorld(HelloWorldService hws) {
+        this.hws = hws;
+    }
+
+    public CompletableFuture<String> helloWorld() {
+        HelloWorldService hws = new HelloWorldService();
+
+        return CompletableFuture.supplyAsync(hws::helloWorld)
+                .thenApply(String::toUpperCase);
+        // .join(); // blocks a main thread until the task in completed
+    }
 
     public static void main(String[] args) {
         HelloWorldService hws = new HelloWorldService();
