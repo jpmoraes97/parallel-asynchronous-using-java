@@ -26,4 +26,12 @@ class CompletableFutureHelloWorldTest {
                 })
                 .join();
     }
+
+    @Test
+    void helloWorld_withSize() {
+        cfhw.helloWorld_withSize()
+                .thenAccept(s -> {
+                    assertEquals("11 - HELLO WORLD", s);
+                }).join();
+    }
 }

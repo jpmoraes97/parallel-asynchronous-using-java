@@ -23,6 +23,12 @@ public class CompletableFutureHelloWorld {
         // .join(); // blocks a main thread until the task in completed
     }
 
+    public CompletableFuture<String> helloWorld_withSize() {
+        return CompletableFuture.supplyAsync(hws::helloWorld)
+                .thenApply(String::toUpperCase)
+                .thenApply(s -> s.length() + " - " + s);
+    }
+
     public static void main(String[] args) {
         HelloWorldService hws = new HelloWorldService();
 
