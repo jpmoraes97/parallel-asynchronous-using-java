@@ -5,6 +5,8 @@ import com.learnjava.util.LoggerUtil;
 
 import java.util.concurrent.CompletableFuture;
 
+import static com.learnjava.util.CommonUtil.startTimer;
+import static com.learnjava.util.CommonUtil.timeTaken;
 import static com.learnjava.util.LoggerUtil.log;
 
 public class CompletableFutureHelloWorld {
@@ -27,6 +29,26 @@ public class CompletableFutureHelloWorld {
         return CompletableFuture.supplyAsync(hws::helloWorld)
                 .thenApply(String::toUpperCase)
                 .thenApply(s -> s.length() + " - " + s);
+    }
+
+    public String helloWorld_approach1() {
+        String hello = hws.hello();
+        String world = hws.world();
+        return hello + world;
+    }
+
+    public String helloWorld_Multiple_Async_Calls() {
+
+        startTimer();
+        CompletableFuture<String> hello = CompletableFuture.supplyAsync(() -> hws.hello());
+        CompletableFuture<String> world = CompletableFuture.supplyAsync(() -> hws.world());
+
+        String hw = hello.thenCombine(world, (h, w) -> h + w) // first, second
+                .thenApply(String::toUpperCase)
+                .join();
+
+        timeTaken();
+        return hw;
     }
 
     public static void main(String[] args) {

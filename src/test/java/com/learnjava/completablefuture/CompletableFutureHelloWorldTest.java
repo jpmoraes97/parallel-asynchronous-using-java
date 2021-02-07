@@ -34,4 +34,15 @@ class CompletableFutureHelloWorldTest {
                     assertEquals("11 - HELLO WORLD", s);
                 }).join();
     }
+
+    @Test
+    void helloWorld_Multiple_Async_Calls() {
+        // given
+
+        // when
+        String helloWorld = cfhw.helloWorld_Multiple_Async_Calls();
+
+        // then
+        assertEquals("HELLO WORLD!", helloWorld);
+    }
 }
