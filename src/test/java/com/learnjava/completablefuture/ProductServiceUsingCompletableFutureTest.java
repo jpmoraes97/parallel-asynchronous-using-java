@@ -73,4 +73,22 @@ class ProductServiceUsingCompletableFutureTest {
                 });
         assertNotNull(product.getReview());
     }
+
+    @Test
+    void retrieveProductDetailsWithInventory_approach2() {
+        // given
+        String productId = "ABC123";
+
+        // when
+        Product product = pscf.retrieveProductDetailsWithInventory_approach2(productId);
+
+        // then
+        assertNotNull(product);
+        assertTrue(product.getProductInfo().getProductOptions().size() > 0);
+        product.getProductInfo().getProductOptions()
+                .forEach(productOption -> {
+                    assertNotNull(productOption.getInventory());
+                });
+        assertNotNull(product.getReview());
+    }
 }
