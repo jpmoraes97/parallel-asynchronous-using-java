@@ -49,4 +49,32 @@ public class CompletableFutureHelloWorldException {
         timeTaken();
         return hw;
     }
+
+    public String helloWorld_3_Async_Calls_Exceptionally() {
+
+        startTimer();
+        CompletableFuture<String> hello = CompletableFuture.supplyAsync(() -> hws.hello());
+        CompletableFuture<String> world = CompletableFuture.supplyAsync(() -> hws.world());
+        CompletableFuture<String> hiCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            delay(1000);
+            return " Hi CompletableFuture!";
+        });
+
+        String hw = hello
+                .exceptionally((ex) -> {
+                    log("Exception is: " + ex.getMessage());
+                    return "";
+                })
+                .thenCombine(world, (h, w) -> h + w) // first, second
+                .exceptionally((ex) -> {
+                    log("Exception after world is: " + ex.getMessage());
+                    return "";
+                })
+                .thenCombine(hiCompletableFuture, (previous, current) -> previous + current)
+                .thenApply(String::toUpperCase)
+                .join();
+
+        timeTaken();
+        return hw;
+    }
 }
