@@ -30,6 +30,10 @@ public class CompletableFutureHelloWorldException {
                     return "";
                 })
                 .thenCombine(world, (h, w) -> h + w) // first, second
+                .handle((res, ex) -> {
+                    log("Exception after world is: " + ex.getMessage());
+                    return "";
+                })
                 .thenCombine(hiCompletableFuture, (previous, current) -> previous + current)
                 .thenApply(String::toUpperCase)
                 .join();
