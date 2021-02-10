@@ -77,4 +77,38 @@ public class CompletableFutureHelloWorldException {
         timeTaken();
         return hw;
     }
+
+    public String helloWorld_3_Async_Calls_WhenComplete() {
+
+        startTimer();
+        CompletableFuture<String> hello = CompletableFuture.supplyAsync(() -> hws.hello());
+        CompletableFuture<String> world = CompletableFuture.supplyAsync(() -> hws.world());
+        CompletableFuture<String> hiCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            delay(1000);
+            return " Hi CompletableFuture!";
+        });
+
+        String hw = hello
+                .whenComplete((res, ex) -> {
+                    if (ex != null) {
+                        log("Exception is: " + ex.getMessage());
+                    }
+                })
+                .thenCombine(world, (h, w) -> h + w) // first, second
+                .whenComplete((res, ex) -> {
+                    if (ex != null) {
+                        log("Exception is: " + ex.getMessage());
+                    }
+                })
+                .exceptionally((ex) -> {
+                    log("Exception before thenCombine is: " + ex.getMessage());
+                    return "";
+                })
+                .thenCombine(hiCompletableFuture, (previous, current) -> previous + current)
+                .thenApply(String::toUpperCase)
+                .join();
+
+        timeTaken();
+        return hw;
+    }
 }
