@@ -36,7 +36,7 @@ class ProductServiceUsingCompletableFutureExceptionTest {
         when(productInfoServiceMock.retrieveProductInfo(any())).thenCallRealMethod();
         when(reviewServiceMock.retrieveReviews(any())).thenThrow(new RuntimeException("Exception =("));
         when(inventoryServiceMock.addInventory(any())).thenCallRealMethod();
-        
+
         // when
         Product product = pscf.retrieveProductDetailsWithInventory_approach2(productId);
 

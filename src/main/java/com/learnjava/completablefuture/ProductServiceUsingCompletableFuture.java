@@ -121,10 +121,16 @@ public class ProductServiceUsingCompletableFuture {
                 .stream()
                 .map(productOption -> CompletableFuture
                         .supplyAsync(() -> inventoryService.addInventory(productOption))
+                        .exceptionally((ex) -> {
+                            log("Inside exceptionally updateInventory_approach2 ex is: " + ex);
+                            return Inventory.builder()
+                                    .count(1).build();
+                        })
                         .thenApply(inventory -> {
                             productOption.setInventory(inventory);
                             return productOption;
-                        }))
+                        })
+                )
                 .collect(Collectors.toList());
         return productOptionList.stream().map(CompletableFuture::join).collect(Collectors.toList());
     }
