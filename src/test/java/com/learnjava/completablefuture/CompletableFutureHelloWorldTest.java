@@ -70,6 +70,16 @@ class CompletableFutureHelloWorldTest {
         assertEquals("HELLO WORLD! HI COMPLETABLEFUTURE!", helloWorld);
     }
 
+    @Test
+    void helloWorld_3_Async_Calls_Custom_ThreadPool() {
+        // given
+
+        // when
+        String helloWorld = cfhw.helloWorld_3_Async_Calls_Custom_ThreadPool();
+
+        // then
+        assertEquals("HELLO WORLD! HI COMPLETABLEFUTURE!", helloWorld);
+    }
 
     @Test
     void helloWorld_4_Async_Calls() {
