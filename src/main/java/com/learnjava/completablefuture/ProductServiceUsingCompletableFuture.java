@@ -96,6 +96,7 @@ public class ProductServiceUsingCompletableFuture {
 
         Product product = cfProdutInfo.thenCombine(cfReview, (productInfo, review) ->
                 new Product(productId, productInfo, review))
+                .whenComplete((product1, ex) -> log("Inside WhenComplete: " + product1 + " and the exception is " + ex))
                 .join(); // block the thread
 
         stopWatch.stop();
