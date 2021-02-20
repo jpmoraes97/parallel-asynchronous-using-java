@@ -64,4 +64,25 @@ public class GitHubJobsClient {
 
         return gitHubPostitionsList;
     }
+
+    public List<GitHubPosition> invokeGithubJobsAPI_usingMultiplePageNumbers_CompletableFuture_Approach2(List<Integer> pageNumbers, String description) {
+
+        startTimer();
+
+        List<CompletableFuture<List<GitHubPosition>>> gitHubPostitions = pageNumbers.stream()
+                .map(page -> CompletableFuture.supplyAsync(() -> invokeGithubJobsAPI_withPageNumber(page, description)))
+                .collect(Collectors.toList());
+
+        CompletableFuture<Void> cfAllOf = CompletableFuture.allOf(gitHubPostitions.toArray(new CompletableFuture[gitHubPostitions.size()]));
+
+        List<GitHubPosition> gitHubPositionList = cfAllOf.thenApply(v -> gitHubPostitions.stream()
+                .map(CompletableFuture::join)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList()))
+                .join();
+
+        timeTaken();
+
+        return gitHubPositionList;
+    }
 }
