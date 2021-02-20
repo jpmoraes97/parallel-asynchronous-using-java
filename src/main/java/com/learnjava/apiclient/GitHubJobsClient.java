@@ -6,6 +6,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.learnjava.util.CommonUtil.startTimer;
@@ -46,4 +47,21 @@ public class GitHubJobsClient {
         return gitHubPostitions;
     }
 
+    public List<GitHubPosition> invokeGithubJobsAPI_usingMultiplePageNumbers_CompletableFuture(List<Integer> pageNumbers, String description) {
+
+        startTimer();
+
+        List<CompletableFuture<List<GitHubPosition>>> gitHubPostitions = pageNumbers.stream()
+                .map(page -> CompletableFuture.supplyAsync(() -> invokeGithubJobsAPI_withPageNumber(page, description)))
+                .collect(Collectors.toList());
+
+        List<GitHubPosition> gitHubPostitionsList = gitHubPostitions.stream()
+                .map(CompletableFuture::join)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        timeTaken();
+
+        return gitHubPostitionsList;
+    }
 }

@@ -44,4 +44,19 @@ class GitHubJobsClientTest {
         assertTrue(gitHubPositions.size() > 0);
         gitHubPositions.forEach(Assertions::assertNotNull);
     }
+
+    @Test
+    void invokeGithubJobsAPI_usingMultiplePageNumbers_CompletableFuture() {
+        //given
+        List<Integer> pageNumbers = List.of(1, 2, 3);
+        String description = "JavaScript";
+
+        //when
+        List<GitHubPosition> gitHubPositions = gitHubJobsClient.invokeGithubJobsAPI_usingMultiplePageNumbers_CompletableFuture(pageNumbers, description);
+        log("gitHubPositions" + gitHubPositions);
+
+        //then
+        assertTrue(gitHubPositions.size() > 0);
+        gitHubPositions.forEach(Assertions::assertNotNull);
+    }
 }
