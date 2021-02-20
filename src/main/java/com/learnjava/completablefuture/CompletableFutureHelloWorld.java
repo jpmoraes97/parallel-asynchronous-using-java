@@ -3,6 +3,7 @@ package com.learnjava.completablefuture;
 import com.learnjava.service.HelloWorldService;
 import com.learnjava.util.LoggerUtil;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -83,7 +84,7 @@ public class CompletableFutureHelloWorld {
         String hw = hello
                 .thenCombine(world, (h, w) -> {
                     log("thenCombine h/w");
-                 return h + w;
+                    return h + w;
                 }) // first, second
                 .thenCombine(hiCompletableFuture, (previous, current) -> {
                     log("thenCombine previous/current");
@@ -229,6 +230,43 @@ public class CompletableFutureHelloWorld {
                 .thenCompose((previous) -> hws.worldFuture(previous))
                 .thenApply(String::toUpperCase);
         // .join(); // blocks a main thread until the task in completed
+    }
+
+    // Use anyOf() when you are dealing with retrieving data from multiple data sources
+    public String anyOf() {
+        // db call
+        CompletableFuture<String> db = CompletableFuture.supplyAsync(() -> {
+            delay(4000);
+            log("response from db");
+            return "hello world";
+        });
+
+        // rest call
+        CompletableFuture<String> restCall = CompletableFuture.supplyAsync(() -> {
+            delay(2000);
+            log("response from rest restCall");
+            return "hello world";
+        });
+
+        // soap call
+        CompletableFuture<String> soapCall = CompletableFuture.supplyAsync(() -> {
+            delay(3000);
+            log("response from rest soapCall");
+            return "hello world";
+        });
+
+        List<CompletableFuture<String>> completableFutureList = List.of(db, restCall, soapCall);
+
+        CompletableFuture<Object> completableFutureAnyOf = CompletableFuture.anyOf(completableFutureList.toArray(new CompletableFuture[completableFutureList.size()]));
+
+        String result = (String) completableFutureAnyOf.thenApply(v -> {
+            if (v instanceof String) {
+                return v;
+            }
+            return null;
+        }).join();
+
+        return result;
     }
 
     public static void main(String[] args) {

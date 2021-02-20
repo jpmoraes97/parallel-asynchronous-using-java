@@ -131,4 +131,15 @@ class CompletableFutureHelloWorldTest {
 
         timeTaken();
     }
+
+    @Test
+    void anyOf() {
+        // given
+
+        // when
+        String helloWorld = cfhw.anyOf();
+
+        // then
+        assertEquals("hello world", helloWorld);
+    }
 }
